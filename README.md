@@ -4,6 +4,10 @@
 
 `import _ "github.com/fredwangwang/go-x509hack"`
 
+
+**NOTE**: with go 1.23, [checklinkname](https://github.com/golang/go/issues/67401) is enabled by default.
+To continue use this in go1.23+, need to compile the project with `-ldflags=-checklinkname=0`
+
 # Rathional
 
 Go's certificate parsing follows strict asn1 standard, where `_` is not considered a valid character set in [PrintableString](https://en.wikipedia.org/wiki/PrintableString).
