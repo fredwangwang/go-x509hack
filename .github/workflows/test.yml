@@ -1,0 +1,30 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  # Catch new Go releases via stable/oldstable aliases without waiting on a push.
+  schedule:
+    - cron: "0 6 * * 1" # weekly, Mondays 06:00 UTC
+
+jobs:
+  test:
+    name: Go ${{ matrix.go-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Aliases track Go's support window and pick up new releases automatically.
+        go-version: [oldstable, stable]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v7
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Test
+        # go1.23+ enables checklinkname by default; this package uses go:linkname.
+        run: go test -ldflags=-checklinkname=0 -v ./...
